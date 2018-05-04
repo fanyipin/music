@@ -3,7 +3,7 @@
         <div class="form">
             <div>
                 <i class="input_fa fa fa-search"></i>
-                <cn_input @search="search" :fn="'search'" class="input" :type="'search'" :placeholder="'搜索专辑、歌手、歌曲'" :name="'search'"></cn_input>
+                <cn_input @search="search" @search_mutil = "search_mutil" :fn="['search','search_mutil']"  class="input" :type="'search'" :placeholder="'搜索专辑、歌手、歌曲'" :name="'search'"></cn_input>
             </div>
         </div>
         <div class="result" v-if="!show_result">
@@ -16,7 +16,39 @@
             <h5 class="blue">搜索“{{keyword}}”</h5>
             <ul class="search_result">
                 <li v-for = '(item, index) in result'>
-                    <i class="fa fa-search"></i>{{item.name}}
+                    <i class="fa fa-search"></i>{{item.keyword}}
+                </li>
+            </ul>
+            <ul class="multi_result">
+                <li>
+                    <h5>最佳匹配</h5>
+                    <div  class="justify column mv">
+                        <div class="column flex stretch">
+                            <div><img src="http://p1.music.126.net/1YmWAoU0nYEgIHx4sIhNWg==/2520080750865619.webp?imageView&thumbnail=178x0&quality=75&tostatic=0&type=webp" alt=""></div>
+                            <div class="flex row_column justify">
+                                <h3>標題</h3>
+                                <p>內容</p>
+                            </div>
+                        </div>
+                        <div>
+                            <i class="fa fa-angle-right"></i>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h5>最佳匹配</h5>
+                    <div  class="justify column mv chr">
+                        <div class="column flex stretch">
+                            <div><img src="http://p1.music.126.net/1YmWAoU0nYEgIHx4sIhNWg==/2520080750865619.webp?imageView&thumbnail=178x0&quality=75&tostatic=0&type=webp" alt=""></div>
+                            <div class="flex row_column justify">
+                                <h3>標題</h3>
+                                <p>內容</p>
+                            </div>
+                        </div>
+                        <div>
+                            <i class="fa fa-angle-right"></i>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -50,18 +82,35 @@
             })
         },
         methods : {
-            search : function(value){
-                this.keyword = value;
-                this.show_result = value ? true : false;
-                this.get_data(value)
+            search : function(e){
+                if(e.keyCode != 13){
+                    var value = e.target.value;
+                    this.keyword = value;
+                    this.show_result = value ? true : false;
+                    this.get_data(value)
+                }
+
             },
             get_data : function(value){
-                this.$http.get(`/api/search/suggest?keywords= ${value}`).then((data) => {
+                console.log(arguments)
+                this.$http.get(`/api/search/suggest/keyword?keywords= ${value}`).then((data) => {
                     if(data.data.result){
-                        this.result = data.data.result.songs;
+                        this.result = data.data.result.allMatch;
                     }
 
                 })
+            },
+            search_mutil : function(data){
+                console.log(data.keyCode)
+                if(data.keyCode === 13){
+                    this.$http.get(`/api/search/multimatch?keywords= ${data.target.value}`).then((data) => {
+                        if(data.data.result)
+                        {
+                            this.result = data.data.result.allMatch;
+                        }
+                     })
+                }
+
             }
         }
     }
@@ -135,4 +184,24 @@
         }
     }
 }
+
+    .multi_result li{
+        padding:0.15rem 0rem
+    }
+    .multi_result .mv{
+
+        img{width:1.8rem;height:1rem;display:block;margin-right:0.1rem}
+        i{font-size:0.28rem}
+        h3{
+            font-family:normal;
+            font-size:0.3rem
+        }
+        p{font-size:0.2rem;color:#ccc}
+
+        &.chr img{
+            width:1rem;
+            height:1rem
+         }
+    }
+
 </style>

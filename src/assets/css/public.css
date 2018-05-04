@@ -43,5 +43,6 @@ a{
   -webkit-box-orient: vertical;
   flex-direction:column;
   align-items:flex-start;
+  display:-webkit-box
 }
 

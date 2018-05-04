@@ -14,7 +14,7 @@ export default{
         keyUp : function(e){
             var flag = e.target.isNeedPrevent;
             if(flag)  return;
-            this.$emit(this.fn, e.target.value)
+            this.emit(e)
             e.target.keyEvent = false ;
         },
         keyDown(e){
@@ -22,7 +22,7 @@ export default{
         },
         input(e){
             if(!e.target.keyEvent){
-                this.$emit(this.fn, e.target.value)
+                this.emit(e)
             }
         },
         start(e){
@@ -30,6 +30,12 @@ export default{
         },
         end(e){
             e.target.isNeedPrevent = false;
+        },
+        emit(e){
+            this.fn = typeof this.fn =='string' ? [this.fn] : this.fn;
+            this.fn.forEach(function(i,val){
+                this.$emit(i, e)
+            }.bind(this))
         }
     }
 }

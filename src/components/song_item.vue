@@ -3,7 +3,7 @@
         <div class="out" v-for="(item,index) in  song_list">
             <div class="column justify wrap">
                 <div class="column flex">
-                    <p v-if="isShow_index" :class="{ 'active': index <= 2 && !color}" class="song_index">{{index + 1 | two}}</p>
+                    <p v-if="isShow_index"  :class="{ 'active': index <= 2 && !color}" class="song_index">{{index + 1 | two}}</p>
                     <div class="flex">
                         <h2 class="song_name flex_content">{{item.song.name}}</h2>
                         <p class="song_author flex_content">{{item.author}}</p>
