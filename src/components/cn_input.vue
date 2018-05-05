@@ -21,7 +21,7 @@ export default{
             e.target.keyEvent = true ;
         },
         input(e){
-            if(!e.target.keyEvent){
+            if(!e.target.keyEvent || e.target.keyCode == 13){
                 this.emit(e)
             }
         },

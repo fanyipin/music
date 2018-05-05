@@ -3,65 +3,92 @@
         <div class="form">
             <div>
                 <i class="input_fa fa fa-search"></i>
-                <cn_input @search="search" @search_mutil = "search_mutil" :fn="['search','search_mutil']"  class="input" :type="'search'" :placeholder="'搜索专辑、歌手、歌曲'" :name="'search'"></cn_input>
+                <cn_input @search="search"  :fn="['search']"  class="input" :type="'search'" :placeholder="'搜索专辑、歌手、歌曲'" :name="'search'"></cn_input>
             </div>
         </div>
-        <div class="result" v-if="!show_result">
+        <div class="result" v-show="!show_result && !show_search_result">
             <h5>热门搜索</h5>
             <ul class="hot_search">
                 <li v-for="item in authors">{{item.name}}</li>
             </ul>
         </div>
-        <div v-else class="result">
-            <h5 class="blue">搜索“{{keyword}}”</h5>
-            <ul class="search_result">
-                <li v-for = '(item, index) in result'>
-                    <i class="fa fa-search"></i>{{item.keyword}}
-                </li>
-            </ul>
-            <ul class="multi_result">
-                <li>
+        <div v-show="show_result || show_search_result" class="result">
+            <div v-show="(!show_search_result && !show_search_result)">
+                <h5 class="blue">搜索“{{keyword}}”</h5>
+                <ul class="search_result">
+                    <li v-for = '(item, index) in result'>
+                        <i class="fa fa-search"></i>{{item.keyword}}
+                    </li>
+                </ul>
+            </div>
+            <div v-show="show_search_result">
+                <div>已顯示“{{keyword}}”的搜索結果，任然搜索<span @click="search_value">{{value}}</span></div>
+                <div id="multi_result">
                     <h5>最佳匹配</h5>
-                    <div  class="justify column mv">
-                        <div class="column flex stretch">
-                            <div><img src="http://p1.music.126.net/1YmWAoU0nYEgIHx4sIhNWg==/2520080750865619.webp?imageView&thumbnail=178x0&quality=75&tostatic=0&type=webp" alt=""></div>
-                            <div class="flex row_column justify">
-                                <h3>標題</h3>
-                                <p>內容</p>
+                </div>
+                <ul class="multi_result">
+                    <li v-for="mv_item in search_result['mv']">
+                        <div  class="justify column mv">
+                            <div class="column flex stretch">
+                                <div><img :src="mv_item.cover" alt=""></div>
+                                <div class="flex row_column justify">
+                                    <h3>MV:{{mv_item.name}}</h3>
+                                    <p>{{mv_item.artistName}}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <i class="fa fa-angle-right"></i>
                             </div>
                         </div>
-                        <div>
-                            <i class="fa fa-angle-right"></i>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <h5>最佳匹配</h5>
-                    <div  class="justify column mv chr">
-                        <div class="column flex stretch">
-                            <div><img src="http://p1.music.126.net/1YmWAoU0nYEgIHx4sIhNWg==/2520080750865619.webp?imageView&thumbnail=178x0&quality=75&tostatic=0&type=webp" alt=""></div>
-                            <div class="flex row_column justify">
-                                <h3>標題</h3>
-                                <p>內容</p>
+                    </li>
+                    <li v-for="album_item in search_result['album']">
+                        <div  class="justify column mv chr">
+                            <div class="column flex stretch">
+                                <div><img :src="album_item.picUrl" alt=""></div>
+                                <div class="flex row_column justify">
+                                    <h3>專輯:{{album_item.name}}</h3>
+                                    <p>{{album_item.artist.name}}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <i class="fa fa-angle-right"></i>
                             </div>
                         </div>
-                        <div>
-                            <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li v-for="artist_item in search_result['artist']">
+                        <div  class="justify column mv chr">
+                            <div class="column flex stretch">
+                                <div><img :src="artist_item.picUrl" alt=""></div>
+                                <div class="flex row_column justify">
+                                    <h3>作者:{{artist_item.name}}</h3>
+                                </div>
+                            </div>
+                            <div>
+                                <i class="fa fa-angle-right"></i>
+                            </div>
                         </div>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+                <song_item   class="active" :loop_data="song_list" :isShow_index="false" :color="true">
+                    <!--<p :class="{ 'active': index <= 2}" class="song_index">{{index + 1 | two}}</p>-->
+                </song_item>
+            </div>
+
+
         </div>
 
     </div>
 </template>
 
 <script>
-    import cn_input from '../components/cn_input'
+    import cn_input from '../components/cn_input';
+    import song_item from '../components/song_item'
+
     export default {
         name: 'App',
         components : {
-            cn_input
+            cn_input,
+            song_item
         },
         data(){
             return {
@@ -69,7 +96,16 @@
                 show_result : false,
                 result : [],
                 keyword : '',
-                authors : []
+                authors : [],
+                search_result : {
+                    album : [],
+                    mv : [],
+                    video : [],
+                    artist : []
+                },
+                show_search_result : false,
+                value : '',
+                showDiff : false
             }
         },
         computed : {
@@ -83,33 +119,74 @@
         },
         methods : {
             search : function(e){
-                if(e.keyCode != 13){
-                    var value = e.target.value;
-                    this.keyword = value;
-                    this.show_result = value ? true : false;
-                    this.get_data(value)
+                var value = e.target.value;
+                this.value = value;
+                this.show_result = value ? true : false;
+                this.show_search_result = false;
+                this.get_data(this.value)
+                if(e.keyCode == 13){
+                    this.search_mutil(this.keyword)
                 }
 
             },
             get_data : function(value){
-                console.log(arguments)
                 this.$http.get(`/api/search/suggest/keyword?keywords= ${value}`).then((data) => {
+                    if(data.data.code != 200) return
                     if(data.data.result){
                         this.result = data.data.result.allMatch;
                     }
 
+                    if(!this.result.length) return
+                    this.keyword = this.result[0].keyword;
+
                 })
             },
-            search_mutil : function(data){
-                console.log(data.keyCode)
-                if(data.keyCode === 13){
-                    this.$http.get(`/api/search/multimatch?keywords= ${data.target.value}`).then((data) => {
-                        if(data.data.result)
-                        {
-                            this.result = data.data.result.allMatch;
-                        }
-                     })
+            search_value(){
+                this.keyword = this.value;
+                this.search_mutil(this.keyword)
+            },
+            search_mutil : function(value){
+                if(this.keyword != this.value){
+                    this.showDiff = true
+                }else{
+                    this.showDiff = false
                 }
+                this.$http.get(`/api/search/multimatch?keywords= ${value}`).then((data) => {
+                    if(data.data.code === 200)
+                    {
+                        var result = data.data.result;
+                        this.search_result = {
+                            album : [],
+                            mv : [],
+                            video : [],
+                            artist : []
+                        };
+                        var that = this;
+                        result.orders.forEach(function(value){
+                            that.search_result[value] = result[value]
+                        })
+                        that.show_search_result = result.orders.length > 0 ? true : false;
+                        that.show_result = false;
+                    }
+                 })
+                this.$http.get(`/api/search?keywords=${value}`).then((data) => {
+                    if(data.data.code == 200 && data.data.result.songCount > 0){
+                        var arr = data.data.result.songs.slice(0,10);
+                        arr.forEach(function(val){
+                            val.song = {
+                                'name' : val.name
+                            }
+                            val.author = val.artists.reduce(function(init, cur, index){
+                                var index = index === 0 ? '' : ' / '
+                                return init + index + cur.name
+                            },'');
+                            val.author += ' - ' + val.album.name;
+                        })
+                        this.song_list = arr;
+                    }
+                })
+
+
 
             }
         }
@@ -186,7 +263,8 @@
 }
 
     .multi_result li{
-        padding:0.15rem 0rem
+        padding:0.15rem 0rem;
+        border-bottom:1px solid #efefef
     }
     .multi_result .mv{
 
@@ -198,9 +276,15 @@
         }
         p{font-size:0.2rem;color:#ccc}
 
-        &.chr img{
-            width:1rem;
-            height:1rem
+        &.chr {
+            img{
+                width:1rem;
+                height:1rem
+            }
+            .column{
+                -webkit-box-align:center;
+                align-items:center
+            }
          }
     }
 

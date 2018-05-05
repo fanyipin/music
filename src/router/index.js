@@ -6,6 +6,7 @@ const recommend = resolve => require(['@/views/recommend'],resolve)
 const hot_song = resolve => require(['@/views/hot_song'],resolve)
 const search = resolve => require(['@/views/search'],resolve)
 const playlist = resolve => require(['@/views/playlist'],resolve)
+const song = resolve => require(['@/views/song'],resolve)
 
 Vue.use(Router)
 
@@ -37,6 +38,10 @@ export default new Router({
     {
       path : '/list/:id',
       component : playlist
+    },
+    {
+      path : '/song/:id',
+      component : song
     }
 
   ]
