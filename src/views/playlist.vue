@@ -2,7 +2,7 @@
     <div>
         <section class="playlist_header">
             <div class="playlist_banner">
-                 <div class="playlist_bg" style="background-image:url('http://p4.music.126.net/bXsM1oiu-xAszFkQj2gtlg==/19143596951757496.jpg?param=170y170')"></div>
+                 <div class="playlist_bg" :style="{backgroundImage: 'url('+ img_url +')'}"></div>
                 <div class="column justify content stretch">
                     <div class="head_img_wrap">
                         <div class="head_num"><i class="fa fa-headphones"></i>{{focus_num | toBillion}}万</div>
@@ -51,7 +51,10 @@
                 tag : [],
                 name : '',
                 describe : '',
-                focus_num : 0
+                focus_num : 0,
+                style_object : {
+                    backgroundImage : "url( this.img_url )"
+                }
             }
         },
         created(){
