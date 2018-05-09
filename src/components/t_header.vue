@@ -10,7 +10,7 @@
 <script>
 
 </script>
-<style>
+<style scoped>
 .header{
     background-color:#d43c33;
     height:0.9rem;

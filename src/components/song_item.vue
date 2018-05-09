@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="out" v-for="(item,index) in  song_list">
+        <router-link :to="'/song/' + item.id" class="out" v-for="(item,index) in  song_list" tag="div">
             <div class="column justify wrap">
                 <div class="column flex">
                     <p v-if="isShow_index"  :class="{ 'active': index <= 2 && !color}" class="song_index">{{index + 1 | two}}</p>
@@ -13,7 +13,7 @@
                     <i class="fa fa-play-circle-o"></i>
                 </div>
             </div>
-        </div>
+        </router-link>
     </div>
 </template>
 <script>

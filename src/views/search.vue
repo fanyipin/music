@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap">
+    <div class="wrap" v-title="'搜索'">
         <div class="form">
             <div>
                 <i class="input_fa fa fa-search"></i>
@@ -16,7 +16,7 @@
             <div v-show="(!show_search_result && !show_search_result)">
                 <h5 class="blue">搜索“{{keyword}}”</h5>
                 <ul class="search_result">
-                    <li v-for = '(item, index) in result'>
+                    <li @click="search_mutil(item.keyword)" v-for = '(item, index) in result'>
                         <i class="fa fa-search"></i>{{item.keyword}}
                     </li>
                 </ul>

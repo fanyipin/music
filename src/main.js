@@ -22,6 +22,12 @@ Vue.filter('two', function(value){
   return value < 10 ? '0' + value : value
 })
 
+Vue.directive('title', {
+  update: function (el, binding) {
+    document.title = binding.value;
+  }
+})
+
 
 Vue.config.productionTip = false
 

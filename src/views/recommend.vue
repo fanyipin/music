@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap">
+    <div class="wrap" v-title="'网易云音乐'">
         <public_title :title="'推荐歌单'"></public_title>
         <div class="list bfc_block">
             <div @click="jump(item.id)" class="item" v-for="item in list" >

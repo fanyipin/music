@@ -23,6 +23,7 @@ a{
   align-items: center;
 }
 .justify{
+  -webkit-box-align:justify;
   justify-content:space-between;
 }
 .column>*{
@@ -43,9 +44,11 @@ a{
 }
 .row_column{
   -webkit-box-orient: vertical;
+  display:-webkit-box;
+  display:flex;
   flex-direction:column;
   align-items:flex-start;
-  display:-webkit-box
+
 }
 .border{
   position:relative;
@@ -57,7 +60,7 @@ a{
   position:absolute;
   bottom:0px;
   left:0px;
-  background-color:#fff;
+  background-color:rgba(255,255,255,0.6);
 }
 
 @media screen and (-webkit-min-device-pixel-ratio: 2){

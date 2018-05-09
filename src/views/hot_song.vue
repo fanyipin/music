@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-title="'热歌推荐'">
         <div>
             <img src="http://s3.music.126.net/m/s/img/hot_music_bg_2x.jpg?f01a252389c26bcf016816242eaa6aee" alt="">
         </div>

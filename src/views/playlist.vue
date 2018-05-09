@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-title="name">
         <section class="playlist_header">
             <div class="playlist_banner">
                  <div class="playlist_bg" :style="{backgroundImage: 'url('+ img_url +')'}"></div>
@@ -54,7 +54,8 @@
                 focus_num : 0,
                 style_object : {
                     backgroundImage : "url( this.img_url )"
-                }
+                },
+                title : ''
             }
         },
         created(){
@@ -67,6 +68,7 @@
                 this.ca_img = result.creator.avatarUrl;
                 this.tag = result.tags;
                 this.describe = result.description;
+                this.title = result.name;
                 result.tracks.forEach(function(val){
                     val.song = {
                         'name' : val.name
