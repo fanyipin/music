@@ -2,6 +2,7 @@
 
 
 ### 线上访问地址：
+> 请用手机端或浏览器调试模式访问
 <a href="http://music.test.cross-earth.com" target="_blank">网易云音乐仿站</a>
 
 #### 已完成功能
