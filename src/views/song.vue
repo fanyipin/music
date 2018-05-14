@@ -89,7 +89,6 @@
         }
     },
     created(){
-        console.log(this.isPlay)
         this.$http.get(`/api/comment/music?id=${this.$route.params.id}`).then((data)=>{
            if(data.data.code == 200){
                 this.comment = data.data.comments;
@@ -147,15 +146,15 @@
         },
         update : function(e){
             var curTime = parseFloat(e.target.currentTime);
+
             if(this.lytic[this.lineNo + 1]){
                 if(curTime >= this.lytic[this.lineNo + 1][0]){
 
                     this.lineNo ++
                 }
-                if(this.lineNo > 1){
+                if(this.lineNo > 1 && this.lineNo < this.lytic.length - 2){
                     this.top = -(this.lineNo - 1) * this.rem * 0.5
                 }
-
             }
 
 
@@ -178,7 +177,7 @@
     mounted : function(){
         this.$refs.audio.addEventListener('ended', function () {
             this.isPlay = !this.isPlay
-        }, false);
+        }.bind(this), false);
     }
     }
 </script>
