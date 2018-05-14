@@ -7,7 +7,7 @@
 * 播放歌词同步（）
 
 > 项目运行需借助于大神的网易音乐api，链接
-[网易云音乐api](http://musicapi.leanapp.cn/)
+<a href="http://musicapi.leanapp.cn/" target="_blank">网易云音乐api</a>
 
 > A Vue.js project
 
