@@ -25,6 +25,11 @@ Vue.filter('two', function(value){
 Vue.directive('title', {
   update: function (el, binding) {
     document.title = binding.value;
+    console.log(98)
+  },
+  inserted: function (el, binding) {
+    document.title = binding.value;
+    console.log(98)
   }
 })
 

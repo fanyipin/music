@@ -89,7 +89,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
     .content_wrap{
         padding:0.2rem;
         position:relative;
