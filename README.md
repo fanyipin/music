@@ -1,5 +1,9 @@
 # music
 
+
+### 线上访问地址：
+<a href="http://music.test.cross-earth.com" target="_blank">网易云音乐仿站</a>
+
 #### 已完成功能
 * 首页
 * 专辑列表
